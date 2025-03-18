@@ -7,6 +7,8 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { loginSuccess } from '../../store/auth/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -18,19 +20,25 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      username: ['', [Validators.required]],
     });
   }
 
   onSubmit() {
-    const { email, password } = this.loginForm.value;
+    const { email, password, username } = this.loginForm.value;
 
     if (email === 'test@gmail.com' && password === 'test@123') {
       console.log('Login successful');
-      this.errorMessage = ''; 
+      this.errorMessage = '';
+      this.store.dispatch(loginSuccess({ email, username }));
       this.router.navigate(['/home']);
     } else {
       console.log('Login Data:', this.loginForm.value);
