@@ -16,6 +16,7 @@ export class HomeComponent {
 
   constructor(private store: Store<{ auth: AuthState }>, private router: Router) {
     this.authState$ = this.store.select('auth');
+    console.log('🏡 HomeComponent Loaded');
   }
   onLogout() {
     this.store.dispatch(logout());
