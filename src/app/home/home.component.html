@@ -7,7 +7,7 @@
     class="home-image"
   />
 
-  <div *ngIf="authState$ | async as auth">
+  <!-- <div *ngIf="authState$ | async as auth">
     <p>
       Hello, <strong>{{ auth.username }}</strong
       >!
@@ -18,6 +18,9 @@
     <p>
       Logged in as: <strong>{{ auth.email }}</strong>
     </p>
-  </div>
+  </div> -->
+
+  <p *ngIf="user$ | async as user">Hello, {{ user }}!</p>
+
   <button (click)="onLogout()">Logout</button>
 </div>

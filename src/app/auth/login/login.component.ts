@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { loginSuccess } from '../../store/auth/auth.actions';
+import { AuthService } from '../../store/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,8 +23,9 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store,
-    private router: Router
+    // private store: Store,
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,14 +37,12 @@ export class LoginComponent {
   onSubmit() {
     const { email, password, username } = this.loginForm.value;
 
-    if (email === 'test@gmail.com' && password === 'test@123') {
-      console.log('Login successful');
-      this.errorMessage = '';
-      this.store.dispatch(loginSuccess({ email, username }));
-      this.router.navigate(['/home']);
-    } else {
-      console.log('Login Data:', this.loginForm.value);
-      this.errorMessage = 'Invalid email or password!';
-    }
+    this.authService.login(email, password).subscribe((success) => {
+      if (success) {
+        this.router.navigate(['/home']);
+      } else {
+        this.errorMessage = 'Invalid credentials!';
+      }
+    });
   }
 }
