@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { loginSuccess } from '../../store/auth/auth.actions';
 import { AuthService } from '../../store/auth/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     // private store: Store,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -39,10 +41,16 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe((success) => {
       if (success) {
+        this.notify('Login Successful!');
         this.router.navigate(['/home']);
       } else {
         this.errorMessage = 'Invalid credentials!';
+        this.notify(this.errorMessage);
       }
     });
+  }
+
+  notify(msg: string) {
+    this.notificationService.showNotification(`Notification=> ${msg}`);
   }
 }
